@@ -52,7 +52,7 @@ def get_metrics(metric_threshold, monitor_metrics, num_classes, top_k = [5,8]):
     
     metrics = {
                     'Micro-Precision'   : Precision(num_classes, metric_threshold, average='micro'),
-                    'Micro-Recall'.     : Recall(num_classes, metric_threshold, average='micro'),
+                    'Micro-Recall'      : Recall(num_classes, metric_threshold, average='micro'),
                     'Micro-F1'          : F1(num_classes, metric_threshold, average='micro'),
                     'Macro-F1'          : F1(num_classes, metric_threshold, average='macro'),
                     'Another-Macro-F1'  : another_macro_f1, 
