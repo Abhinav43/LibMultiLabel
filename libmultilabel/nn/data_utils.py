@@ -87,7 +87,7 @@ def _load_raw_data(path, is_test=False):
         data.columns = ['index', 'label', 'text']
     else:
         raise ValueError(f'Expected 2 or 3 columns, got {data.shape[1]}.')
-    data['label'] = data['label'].map(lambda s: s.split())
+    data['label'] = data['label'].map(lambda s: str(s).split())
     data['text'] = data['text'].map(tokenize)
     data = data.to_dict('records')
     print(f'Total Records {len(data)}')
