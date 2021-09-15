@@ -90,6 +90,7 @@ def _load_raw_data(path, is_test=False):
     data['label'] = data['label'].map(lambda s: s.split())
     data['text'] = data['text'].map(tokenize)
     data = data.to_dict('records')
+    print(f'Total Records {len(data)}')
     if not is_test:
         data = [d for d in data if len(d['label']) > 0]
     return data
