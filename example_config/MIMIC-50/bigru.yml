@@ -1,23 +1,23 @@
 # data
 data_dir: data/MIMIC-50
 data_name: MIMIC-50
-min_vocab_freq: 3
+min_vocab_freq: 1
 max_seq_length: 2500
 
 # train
 seed: 1337
-epochs: 100
+epochs: 200
 batch_size: 16
 optimizer: adam
 learning_rate: 0.001
 weight_decay: 0
-patience: 10
+patience: 100
 shuffle: true
 
 # eval
 eval_batch_size: 1
 monitor_metrics: ['P@5']
-val_metric: P@5
+val_metric: Micro-F1
 
 # model
 model_name: BiGRU
