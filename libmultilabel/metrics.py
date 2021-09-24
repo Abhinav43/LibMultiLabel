@@ -59,20 +59,6 @@ def get_metrics(metric_threshold, monitor_metrics, num_classes, top_k = [5,8]):
               }
 
 
-    macr_pre = {f'Micro-Precision @ {k}': Precision(num_classes, 
-                                                    metric_threshold, 
-                                                    average='micro', 
-                                                    top_k = k) for k in top_k}
-
-    micr_pre = {f'Macro-Precision @ {k}': Precision(num_classes, 
-                                                    metric_threshold, 
-                                                    average='macro', 
-                                                    top_k = k) for k in top_k}
-
-    metrics.update(macr_pre)
-    metrics.update(micr_pre)
-
-
     for metric in monitor_metrics:
         if isinstance(metric, Metric):  # customized metric
             metrics[type(metric).__name__] = metric
