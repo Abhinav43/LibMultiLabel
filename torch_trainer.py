@@ -107,7 +107,7 @@ class TorchTrainer:
         self.earlystopping_callback = EarlyStopping(
             patience=self.config.patience, monitor=self.config.val_metric, mode='max')
         self.trainer = pl.Trainer(logger=False, num_sanity_val_steps=0,
-                                  gpus=0 if self.config.cpu else 1,
+                                  gpus=-1,
                                   progress_bar_refresh_rate=0 if self.config.silent else 1,
                                   max_epochs=self.config.epochs,
                                   callbacks=[self.checkpoint_callback, self.earlystopping_callback])
