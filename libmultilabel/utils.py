@@ -159,7 +159,7 @@ def dump_log(log_path, metrics=None, split=None, config=None):
             try:
                 result = json.load(fp,strict=False)
             except Exception as e:
-                pass
+                result = dict()
     else:
         result = dict()
 
