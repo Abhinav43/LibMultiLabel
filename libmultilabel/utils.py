@@ -50,20 +50,55 @@ def dump_log(log_path, metrics=None, split=None, config=None):
     """
     
     
-    confg_result = log_path
-    log_path.replace('logs.json','result.csv')
-    confg_result.replace('logs.json','config_result.txt')
+#     confg_result = log_path
+#     log_path.replace('logs.json','result.csv')
+#     confg_result.replace('logs.json','config_result.txt')
+    
+# #     log_path_new = log_path.split('/')[2]
+    
+    
+#     if config:
+#         config_to_save = copy.deepcopy(dict(config))
+#         with open(confg_result,'a') as f:
+#             f.write(str(config_to_save) + '\n')
+    
+#     if split and metrics:
+#         if os.path.isfile(log_path):
+#             df     = pd.read_csv(log_path)
+#         else:
+#             df     = pd.DataFrame({'AUC-ROC macro': [0], 'AUC-ROC micro': [0], 
+#                       'Another-Macro-F1': [0],'Macro-F1': [0],
+#                       'Micro-F1': [0],'P@5': [0]})
+        
+#         metrics = {k: [m] for k,m in metrics.items()}
+#         result = pd.DataFrame(metrics)
+#         df_new = pd.concat([df, result])
+#         df_new.to_csv(log_path, index=False)
+        
+#     logging.info(f'Finish writing log to {log_path}.')
+
+
+    data_log = log_path.split('/')[:-1]
+    conf_p   = data_log
+
+    data_log.append('result.csv')
+    result_path = "/".join(data_log)
+    conf_p.append('config_result.txt')
+    conf_pathm   = "/".join(conf_p)
+    
+    os.makedirs(os.path.dirname(result_path), exist_ok=True)
+    os.makedirs(os.path.dirname(conf_pathm),  exist_ok=True)
 #     log_path_new = log_path.split('/')[2]
     
     
     if config:
         config_to_save = copy.deepcopy(dict(config))
-        with open(confg_result,'a') as f:
+        with open(conf_pathm,'a') as f:
             f.write(str(config_to_save) + '\n')
     
     if split and metrics:
-        if os.path.isfile(log_path):
-            df     = pd.read_csv(log_path)
+        if os.path.isfile(result_path):
+            df     = pd.read_csv(result_path)
         else:
             df     = pd.DataFrame({'AUC-ROC macro': [0], 'AUC-ROC micro': [0], 
                       'Another-Macro-F1': [0],'Macro-F1': [0],
@@ -72,9 +107,9 @@ def dump_log(log_path, metrics=None, split=None, config=None):
         metrics = {k: [m] for k,m in metrics.items()}
         result = pd.DataFrame(metrics)
         df_new = pd.concat([df, result])
-        df_new.to_csv(log_path, index=False)
+        df_new.to_csv(result_path, index=False)
         
-    logging.info(f'Finish writing log to {log_path}.')
+    logging.info(f'Finish writing log to {result_path}.')
 
 
 def set_seed(seed):
