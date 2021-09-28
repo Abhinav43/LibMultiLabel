@@ -79,15 +79,13 @@ def dump_log(log_path, metrics=None, split=None, config=None):
 
 
     data_log = log_path.split('/')[:-1]
-    conf_p   = data_log
-
+    os.makedirs(os.path.dirname("/".join(data_log) + '/'), exist_ok=True)
+    conf_p   = copy.deepcopy(data_log)
     data_log.append('result.csv')
     result_path = "/".join(data_log)
     conf_p.append('config_result.txt')
     conf_pathm   = "/".join(conf_p)
     
-    os.makedirs(os.path.dirname(result_path), exist_ok=True)
-    os.makedirs(os.path.dirname(conf_pathm),  exist_ok=True)
 #     log_path_new = log_path.split('/')[2]
     
     
