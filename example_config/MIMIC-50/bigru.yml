@@ -6,12 +6,12 @@ max_seq_length: 2500
 
 # train
 seed: 1337
-epochs: 200
+epochs: 100
 batch_size: 16
 optimizer: adam
 learning_rate: 0.001
 weight_decay: 0
-patience: 100
+patience: 30
 shuffle: true
 
 # eval
