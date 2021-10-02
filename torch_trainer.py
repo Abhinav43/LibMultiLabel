@@ -83,7 +83,10 @@ class TorchTrainer:
 
             network = getattr(networks, self.config.model_name)(
                 embed_vecs=word_dict.vectors,
-                num_classes=len(classes),
+                num_classes=len(classes), 
+                gcn_file = self.config.gcn_file, 
+                model_mode = self.config.model_attach_mode, 
+                model_dim_gcn = self.config.gcn_dim,
                 **dict(self.config.network_config)
             )
             if self.config.init_weight is not None:
@@ -107,7 +110,7 @@ class TorchTrainer:
         self.earlystopping_callback = EarlyStopping(
             patience=self.config.patience, monitor=self.config.val_metric, mode='max')
         self.trainer = pl.Trainer(logger=False, num_sanity_val_steps=0,
-                                  gpus=-1,
+                                  gpus="1, 2, 3",
                                   progress_bar_refresh_rate=0 if self.config.silent else 1,
                                   max_epochs=self.config.epochs,
                                   callbacks=[self.checkpoint_callback, self.earlystopping_callback])
