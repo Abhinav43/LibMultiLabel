@@ -69,6 +69,7 @@ def get_config():
     # model
     parser.add_argument('--model_name', default='KimCNN',
                         help='Model to be used (default: %(default)s)')
+    
     parser.add_argument('--init_weight', default='kaiming_uniform',
                         help='Weight initialization to be used (default: %(default)s)')
     parser.add_argument('--activation', default='relu',
@@ -97,6 +98,17 @@ def get_config():
     # pretrained vocab / embeddings
     parser.add_argument('--vocab_file', type=str,
                         help='Path to a file holding vocabuaries (default: %(default)s)')
+    
+    parser.add_argument('--gcn_file', type=str,
+                        help='Path to a file holding gcn (default: %(default)s)')
+    
+    parser.add_argument('--model_attach_mode', type=str,
+                        help='Path to a file holding mode (default: %(default)s)')
+    
+    parser.add_argument('--gcn_dim', type=int,
+                        help='Path to a file holding dim (default: %(default)s)')
+    
+    
     parser.add_argument('--embed_file', type=str,
                         help='Path to a file holding pre-trained embeddings (default: %(default)s)')
     parser.add_argument('--label_file', type=str,
