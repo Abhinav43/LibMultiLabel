@@ -98,13 +98,15 @@ def transform_cov(d, method, kernel_size, out_channel = None):
 
 import pickle as pk 
 
+os.chdir("../nodes")
+
 
 def get_gcn_data(file_name):
 
   with open(file_name, 'rb') as f:
     data = pk.load(f)
 
-  with open('/home/admin/Monk/embe_experiments/LibMultiLabel/libmultilabel/nn/networks/use_use_m_None_2.pk', 'rb') as f:
+  with open('../../../data/use_use_m_None_2 (1).pk', 'rb') as f:
     data_2 = pk.load(f)
   
   edm = data['emd']
