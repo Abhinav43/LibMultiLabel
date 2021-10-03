@@ -14,7 +14,8 @@ import numpy as np
 
 
 def transform3to2d(d, method, dim):
-
+  
+  dim = int(dim)
   if method   == 'amax':
     return torch.amax(d, dim)
   elif method == 'amin':
@@ -50,7 +51,10 @@ def transform3to2d(d, method, dim):
 
 
 
-def transform_cov(d, method, kernel_size, cuda_ve, out_channel = None):
+def transform_cov(d, method, cuda_ve, kernel_size, out_channel = None):
+  
+  kernel_size= int(kernel_size)
+  
 
 #   if method == 'maxpool':
 #     return torch.nn.MaxPool1d(kernel_size, stride = 1024)(d).squeeze()
