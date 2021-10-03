@@ -50,7 +50,7 @@ def transform3to2d(d, method, dim):
 
 
 
-def transform_cov(d, method, kernel_size, out_channel = None):
+def transform_cov(d, method, kernel_size, cuda_ve, out_channel = None):
 
 #   if method == 'maxpool':
 #     return torch.nn.MaxPool1d(kernel_size, stride = 1024)(d).squeeze()
@@ -59,13 +59,13 @@ def transform_cov(d, method, kernel_size, out_channel = None):
 #   elif method == 'adoptive':
 #     return torch.nn.AdaptiveMaxPool1d(kernel_size)(d).view(d.shape[0],-1)
   if method == 'covd1d':
-    return torch.nn.Conv1d(in_channels = d.shape[1], out_channels= out_channel, kernel_size = kernel_size, stride=d.shape[-1])(d).cuda().squeeze()
+    return torch.nn.Conv1d(in_channels = d.shape[1], out_channels= out_channel, kernel_size = kernel_size, stride=d.shape[-1])(d).to(cuda_ve).squeeze()
   elif method == 'both':
-    cov_out = torch.nn.Conv1d(in_channels = d.shape[1], out_channels= out_channel, kernel_size = kernel_size, stride= 1)(d).cuda()
+    cov_out = torch.nn.Conv1d(in_channels = d.shape[1], out_channels= out_channel, kernel_size = kernel_size, stride= 1)(d).to(cuda_ve)
     fin     = torch.nn.MaxPool1d(kernel_size, cov_out.shape[-1])(cov_out).squeeze()
     return fin
   elif method == 'all':
-    cov_out = torch.nn.Conv1d(in_channels = d.shape[1], out_channels= out_channel, kernel_size = kernel_size, stride= 1).cuda()(d)
+    cov_out = torch.nn.Conv1d(in_channels = d.shape[1], out_channels= out_channel, kernel_size = kernel_size, stride= 1).to(cuda_ve)(d)
     fin     = torch.nn.MaxPool1d(kernel_size, cov_out.shape[-1])(cov_out).squeeze()
 
 
@@ -195,15 +195,16 @@ class BiGRU(BaseModel):
 
 
         x_da, adj_da          = get_gcn_data(gcn_file)
-        self.x_da_f           = torch.nn.Parameter(torch.Tensor(x_da).cuda(), requires_grad=True)
-        self.A                = torch.Tensor(adj_da).cuda()
+        self.x_da_f           = torch.nn.Parameter(
+            torch.Tensor(x_da).to(f'cuda:{self.model_dim_gcn}'), requires_grad=True)
+        self.A                = torch.Tensor(adj_da).to(f'cuda:{self.model_dim_gcn}')
         self.edge_index       = self.A.nonzero(as_tuple=False).t()
         self.edge_weight      = torch.nn.Parameter(self.A[self.edge_index[0], self.edge_index[1]],requires_grad=True)
         self.adj              = SparseTensor(row=self.edge_index[0], col=self.edge_index[1], value=self.edge_weight,
                           sparse_sizes=(50,50))
         
 
-        self.gcn             = GCN(self.x_da_f.shape[-1], 1024).cuda()
+        self.gcn             = GCN(self.x_da_f.shape[-1], 1024).to(f'cuda:{self.model_dim_gcn}')
 
     def forward(self, input):
         x = self.embedding(input['text']) # (batch_size, length, rnn_dim)
@@ -215,7 +216,7 @@ class BiGRU(BaseModel):
 #         cm = transform_cov(x, 'all', 3, 1024)
         
         if str(self.model_mode) in ['covd1d', 'both']:
-            x = transform_cov(x, str(self.model_mode), 3, 1024)
+            x = transform_cov(x, str(self.model_mode), f'cuda:{self.model_dim_gcn}', 3, 1024)
         else:
             x = transform3to2d(x, str(self.model_mode), 1)
         
