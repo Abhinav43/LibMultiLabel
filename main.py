@@ -99,6 +99,12 @@ def get_config():
     parser.add_argument('--vocab_file', type=str,
                         help='Path to a file holding vocabuaries (default: %(default)s)')
     
+    parser.add_argument('--gpu_id', type=str,
+                        help='Path to a file holding vocabuaries (default: %(default)s)')
+    
+    
+    
+    
     parser.add_argument('--gcn_file', type=str,
                         help='Path to a file holding gcn (default: %(default)s)')
     
