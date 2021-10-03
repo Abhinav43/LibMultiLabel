@@ -98,8 +98,6 @@ def transform_cov(d, method, kernel_size, out_channel = None):
 
 import pickle as pk 
 
-os.chdir("../nodes")
-
 
 def get_gcn_data(file_name):
 
