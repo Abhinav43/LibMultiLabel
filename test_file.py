@@ -1,0 +1,1 @@
+python3 main.py --config example_config/MIMIC-50/bigru.yml --train_path data/MIMIC-50/train.txt --test_path data/MIMIC-50/test.txt --val_path data/MIMIC-50/test.txt --embed_file all_emb_data/s_emb/use_l_4.pkl --gcn_file all_emb_data/gcn_data_4/use_l_None_4.embed --model_attach_mode amax --gcn_dim 1 --gpu_id 1
