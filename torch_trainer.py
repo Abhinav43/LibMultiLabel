@@ -106,7 +106,10 @@ class TorchTrainer:
 
     def _setup_trainer(self):
         """Setup torch trainer and callbacks."""
-        self.checkpoint_callback = ModelCheckpoint(monitor=self.config.val_metric, mode='max')
+        self.checkpoint_callback = ModelCheckpoint(
+            dirpath=self.checkpoint_dir, filename='best_model', save_last=True,
+            save_top_k=1, monitor=self.config.val_metric, mode='max')
+        
         self.earlystopping_callback = EarlyStopping(
             patience=self.config.patience, monitor=self.config.val_metric, mode='max')
         self.trainer = pl.Trainer(logger=False, num_sanity_val_steps=0,
