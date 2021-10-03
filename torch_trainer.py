@@ -70,6 +70,7 @@ class TorchTrainer:
             self.model = Model.load_from_checkpoint(checkpoint_path)
         else:
             logging.info('Initialize model from scratch.')
+#             print("this is", self.config.embed_file)
             word_dict = data_utils.load_or_build_text_dict(
                 dataset=self.datasets['train'],
                 vocab_file=self.config.vocab_file,
@@ -78,6 +79,7 @@ class TorchTrainer:
                 silent=self.config.silent,
                 normalize_embed=self.config.normalize_embed
             )
+            
             classes = data_utils.load_or_build_label(
                 self.datasets, self.config.label_file, self.config.silent)
 
@@ -104,13 +106,11 @@ class TorchTrainer:
 
     def _setup_trainer(self):
         """Setup torch trainer and callbacks."""
-        self.checkpoint_callback = ModelCheckpoint(
-            dirpath=self.checkpoint_dir, filename='best_model', save_last=True,
-            save_top_k=1, monitor=self.config.val_metric, mode='max')
+        self.checkpoint_callback = ModelCheckpoint(monitor=self.config.val_metric, mode='max')
         self.earlystopping_callback = EarlyStopping(
             patience=self.config.patience, monitor=self.config.val_metric, mode='max')
         self.trainer = pl.Trainer(logger=False, num_sanity_val_steps=0,
-                                  gpus="1, 2, 3",
+                                  gpus= str(self.config.gpu_id),
                                   progress_bar_refresh_rate=0 if self.config.silent else 1,
                                   max_epochs=self.config.epochs,
                                   callbacks=[self.checkpoint_callback, self.earlystopping_callback])
