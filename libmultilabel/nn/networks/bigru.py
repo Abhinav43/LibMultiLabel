@@ -51,10 +51,8 @@ def transform3to2d(d, method, dim):
 
 
 
+
 def transform_cov(d, method, cuda_ve, kernel_size, out_channel = None):
-  
-  kernel_size= int(kernel_size)
-  
 
 #   if method == 'maxpool':
 #     return torch.nn.MaxPool1d(kernel_size, stride = 1024)(d).squeeze()
@@ -62,15 +60,17 @@ def transform_cov(d, method, cuda_ve, kernel_size, out_channel = None):
 #     return torch.nn.AvgPool1d(kernel_size, stride = 1024)(d).squeeze()
 #   elif method == 'adoptive':
 #     return torch.nn.AdaptiveMaxPool1d(kernel_size)(d).view(d.shape[0],-1)
+
+  d = d.to(cuda_ve)
   if method == 'covd1d':
-    return torch.nn.Conv1d(in_channels = d.shape[1], out_channels= out_channel, kernel_size = kernel_size, stride=d.shape[-1])(d).to(cuda_ve).squeeze()
+    return torch.nn.Conv1d(in_channels = d.shape[1], out_channels= out_channel, kernel_size = kernel_size, stride=d.shape[-1]).to(cuda_ve)(d).squeeze()
   elif method == 'both':
     cov_out = torch.nn.Conv1d(in_channels = d.shape[1], out_channels= out_channel, kernel_size = kernel_size, stride= 1)(d).to(cuda_ve)
-    fin     = torch.nn.MaxPool1d(kernel_size, cov_out.shape[-1])(cov_out).squeeze()
+    fin     = torch.nn.MaxPool1d(kernel_size, cov_out.shape[-1]).to(cuda_ve)(cov_out).squeeze()
     return fin
   elif method == 'all':
     cov_out = torch.nn.Conv1d(in_channels = d.shape[1], out_channels= out_channel, kernel_size = kernel_size, stride= 1).to(cuda_ve)(d)
-    fin     = torch.nn.MaxPool1d(kernel_size, cov_out.shape[-1])(cov_out).squeeze()
+    fin     = torch.nn.MaxPool1d(kernel_size, cov_out.shape[-1])(cov_out).squeeze().to(cuda_ve)
 
 
 #     drt = {'maxpool': torch.nn.MaxPool1d(kernel_size, stride = d.shape[-1])(d).squeeze().shape, 
